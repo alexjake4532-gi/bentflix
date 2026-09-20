@@ -1,9 +1,11 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bentflix - Premium Streaming</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23a855f7'/%3E%3Cstop offset='1' stop-color='%237c3aed'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2309090b'/%3E%3Cpath d='M14 11h10l8 15 8-15h10L37 32l13 21H40l-8-15-8 15H14l13-21z' fill='url(%23g)'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2309090b'/%3E%3Cpath d='M14 11h10l8 15 8-15h10L37 32l13 21H40l-8-15-8 15H14l13-21z' fill='%23a855f7'/%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -55,6 +57,152 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        .nav-link, .nav-icon {
+            white-space: nowrap;
+        }
+
+        /* Animated purple-glow UI */
+        .purple-glow {
+            position: relative;
+            isolation: isolate;
+        }
+
+        .purple-glow::before {
+            content: "";
+            position: absolute;
+            inset: -6px -10px;
+            border-radius: 9999px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.42), transparent 68%);
+            filter: blur(10px);
+            opacity: 0;
+            transform: scale(.75);
+            transition: opacity .35s ease, transform .35s ease;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .purple-glow:hover::before,
+        .purple-glow.active::before {
+            opacity: 1;
+            transform: scale(1);
+            animation: purplePulse 2s ease-in-out infinite;
+        }
+
+        .purple-glow:hover,
+        .purple-glow.active {
+            color: #e9d5ff !important;
+            text-shadow: 0 0 12px rgba(168, 85, 247, .8);
+        }
+
+        .purple-glow.active::after {
+            content: "";
+            position: absolute;
+            left: 15%;
+            right: 15%;
+            bottom: -8px;
+            height: 2px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, transparent, #a855f7, #d8b4fe, #a855f7, transparent);
+            box-shadow: 0 0 12px #a855f7, 0 0 24px rgba(168, 85, 247, .65);
+            animation: purpleLine 1.8s ease-in-out infinite;
+        }
+
+        .nav-icon.purple-glow:hover {
+            transform: translateY(-1px) scale(1.12);
+        }
+
+        @keyframes purplePulse {
+            0%, 100% { opacity: .55; filter: blur(10px); }
+            50% { opacity: 1; filter: blur(14px); }
+        }
+
+        @keyframes purpleLine {
+            0%, 100% { opacity: .65; transform: scaleX(.75); }
+            50% { opacity: 1; transform: scaleX(1); }
+        }
+
+        /* Purple-glow search interface */
+        #search-modal {
+            background:
+                radial-gradient(circle at 50% 0%, rgba(168,85,247,.16), transparent 38%),
+                rgba(0,0,0,.82);
+        }
+
+        #search-modal > div:first-child {
+            position: relative;
+        }
+
+        #search-modal > div:first-child::before {
+            content: "";
+            position: absolute;
+            inset: -12px;
+            border-radius: 9999px;
+            background: radial-gradient(circle, rgba(168,85,247,.3), transparent 68%);
+            filter: blur(16px);
+            opacity: .75;
+            pointer-events: none;
+            animation: purplePulse 2.4s ease-in-out infinite;
+        }
+
+        #search-input {
+            position: relative;
+            z-index: 1;
+            border-color: rgba(168,85,247,.35) !important;
+            box-shadow: 0 0 0 rgba(168,85,247,0);
+            transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+        }
+
+        #search-input:focus {
+            border-color: rgba(168,85,247,.9) !important;
+            box-shadow: 0 0 20px rgba(168,85,247,.25), 0 0 45px rgba(168,85,247,.12);
+            transform: translateY(-1px);
+        }
+
+        /* Purple modal glow for List, History, Notifications and Settings */
+        #list-modal, #history-modal { display:none !important; }
+        #list-modal > div,
+        #history-modal > div,
+        #noti-modal > div,
+        #settings-modal > div {
+            box-shadow:
+                0 0 35px rgba(168,85,247,.08),
+                0 0 80px rgba(168,85,247,.04);
+            border-color: rgba(168,85,247,.18);
+        }
+
+
+        .nav-icon {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- SPA View System --- */
+        .app-view { display: none; min-height: calc(100vh - 110px); padding: 120px 24px 80px; }
+        .app-view.view-active { display: block; animation: viewEnter .5s cubic-bezier(.22,1,.36,1) both; }
+        #main-content.home-hidden { display: none; }
+        @keyframes viewEnter { from { opacity: 0; transform: translateY(18px) scale(.99); filter: blur(4px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+        .view-shell { width: 100%; max-width: 1800px; margin: 0 auto; }
+        .view-heading { display:flex; align-items:end; justify-content:space-between; gap:20px; margin-bottom:28px; }
+        .view-title { font-size: clamp(2rem,4vw,3.4rem); font-weight:900; letter-spacing:-1.5px; }
+        .view-subtitle { color:#a1a1aa; margin-top:7px; }
+        .view-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+        @media (min-width:640px){ .view-grid{grid-template-columns:repeat(3,minmax(0,1fr));} }
+        @media (min-width:768px){ .view-grid{grid-template-columns:repeat(4,minmax(0,1fr));} }
+        @media (min-width:1024px){ .view-grid{grid-template-columns:repeat(5,minmax(0,1fr)); gap:20px;} }
+        @media (min-width:1440px){ .view-grid{grid-template-columns:repeat(6,minmax(0,1fr));} }
+        .view-card { animation: cardReveal .45s cubic-bezier(.22,1,.36,1) both; }
+        .view-card:nth-child(2){animation-delay:.03s}.view-card:nth-child(3){animation-delay:.06s}.view-card:nth-child(4){animation-delay:.09s}.view-card:nth-child(5){animation-delay:.12s}.view-card:nth-child(6){animation-delay:.15s}
+        .discover-grid { display:grid; grid-template-columns:repeat(1,minmax(0,1fr)); gap:18px; }
+        @media (min-width:640px){.discover-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+        @media (min-width:1024px){.discover-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+        .discover-tile { position:relative; min-height:180px; border:1px solid rgba(255,255,255,.08); border-radius:24px; overflow:hidden; background:linear-gradient(135deg,rgba(24,24,27,.98),rgba(10,10,12,.98)); box-shadow:0 0 35px rgba(168,85,247,.04); transition:.35s ease; }
+        .discover-tile:hover { transform:translateY(-5px); border-color:rgba(168,85,247,.55); box-shadow:0 0 35px rgba(168,85,247,.18), inset 0 0 30px rgba(168,85,247,.05); }
+        .discover-tile::after { content:""; position:absolute; inset:auto -20% -55% 10%; height:120px; background:radial-gradient(circle,rgba(168,85,247,.35),transparent 68%); filter:blur(20px); }
+        .empty-view { min-height:360px; display:flex; align-items:center; justify-content:center; text-align:center; border:1px dashed rgba(168,85,247,.22); border-radius:28px; background:radial-gradient(circle at center,rgba(168,85,247,.07),transparent 60%); }
+
         /* Hero Typography */
         .hero-title {
             font-weight: 900;
@@ -70,34 +218,86 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        /* Premium Settings UI */
+        .settings-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(168,85,247,.10);border:1px solid rgba(168,85,247,.14);color:#c084fc;flex:none;transition:.25s ease}
+        .settings-row:hover .settings-icon{background:rgba(168,85,247,.18);border-color:rgba(168,85,247,.32);box-shadow:0 0 18px rgba(168,85,247,.12);transform:scale(1.04)}
+        .settings-toggle{appearance:none;width:46px;height:26px;border-radius:999px;background:#27272a;border:1px solid rgba(255,255,255,.10);position:relative;cursor:pointer;transition:.25s ease;flex:none}
+        .settings-toggle::after{content:"";position:absolute;width:20px;height:20px;left:2px;top:2px;border-radius:50%;background:#71717a;transition:.25s cubic-bezier(.22,1,.36,1);box-shadow:0 2px 6px rgba(0,0,0,.35)}
+        .settings-toggle:checked{background:linear-gradient(135deg,#a855f7,#7c3aed);border-color:rgba(216,180,254,.5);box-shadow:0 0 18px rgba(168,85,247,.28)}
+        .settings-toggle:checked::after{transform:translateX(20px);background:#fff}
+        .settings-toggle:focus-visible{outline:2px solid rgba(192,132,252,.8);outline-offset:3px}
+        .settings-panel{animation:settingsIn .35s cubic-bezier(.22,1,.36,1) both}
+        @keyframes settingsIn{from{opacity:0;transform:translateY(18px) scale(.96);filter:blur(6px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+
+        .account-panel{animation:settingsIn .35s cubic-bezier(.22,1,.36,1) both}
+        .account-tab.active{background:rgba(168,85,247,.16);color:#e9d5ff;box-shadow:0 0 20px rgba(168,85,247,.08)}
+        .account-input{width:100%;height:46px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035);padding:0 14px;color:#fff;outline:none;transition:.2s}
+        .account-input:focus{border-color:rgba(168,85,247,.55);box-shadow:0 0 0 3px rgba(168,85,247,.08)}
+        .account-input::placeholder{color:#4b4653}
+    /* Smooth modal and profile motion */
+    @keyframes bentflixModalIn { from { opacity: 0; transform: translateY(12px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes bentflixModalOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(8px) scale(.985); } }
+    @keyframes bentflixPanelIn { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes bentflixPanelOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(12px) scale(.98); } }
+    .bentflix-modal-open { animation: bentflixModalIn .24s cubic-bezier(.22,1,.36,1) both; }
+    .bentflix-modal-closing { animation: bentflixModalOut .2s ease both; }
+    .bentflix-modal-open > div { animation: bentflixPanelIn .28s cubic-bezier(.22,1,.36,1) both; }
+    .bentflix-modal-closing > div { animation: bentflixPanelOut .2s ease both; }
+    .profile-avatar { position:relative; width:34px; height:34px; border-radius:9999px; transition:transform .25s ease, filter .25s ease; }
+    .profile-avatar:hover { transform:scale(1.08); filter:drop-shadow(0 0 10px rgba(168,85,247,.35)); }
+    .profile-avatar-pop { animation: bentflixProfilePop .26s cubic-bezier(.22,1,.36,1); }
+    @keyframes bentflixProfilePop { 50% { transform:scale(1.16); } }
+    .profile-avatar-ring { position:absolute; inset:0; border-radius:9999px; background:linear-gradient(135deg,#c084fc,#7c3aed 55%,#4c1d95); padding:1px; }
+    .profile-avatar-face { position:absolute; inset:2px; border-radius:9999px; background:#17131f; display:flex; align-items:center; justify-content:center; color:#c084fc; border:1px solid rgba(255,255,255,.08); }
+    @media (prefers-reduced-motion: reduce) { .bentflix-modal-open, .bentflix-modal-closing, .bentflix-modal-open > div, .bentflix-modal-closing > div { animation:none !important; } }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col relative">
 
-    <nav class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 glass-nav rounded-full px-6 py-3 flex items-center justify-between gap-8 md:gap-12 w-[92%] max-w-6xl shadow-2xl transition-all duration-300 hover:bg-black/80">
-        <!-- Brand / Custom Logos -->
-        <a href="#" class="flex items-center gap-3 hover:scale-105 transition-transform duration-300" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-            <!-- Folded B Logo Icon -->
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" data-real-src="image_8.png" alt="B Logo" class="w-8 h-8 object-contain rounded-md shadow-md" style="content:url('image_8.png');" />
-            <!-- Bentflix Curved Text Logo -->
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" data-real-src="image_7.png" alt="Bentflix" class="h-6 object-contain hidden sm:inline" style="content:url('image_7.png');" />
+    <nav class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 glass-nav rounded-full px-4 md:px-6 py-3 flex items-center justify-between gap-4 md:gap-8 w-[94%] max-w-7xl shadow-2xl transition-all duration-300 hover:bg-black/80">
+        <!-- Brand -->
+        <a href="#" class="flex items-center hover:scale-105 transition-transform duration-300 shrink-0" id="brand-home">
+            <span class="text-2xl font-extrabold tracking-tight text-purple-500">BENFLIX</span>
         </a>
 
-        <!-- Main Links -->
-        <div class="hidden lg:flex items-center gap-8 text-sm font-medium text-gray-300">
-            <a href="#" class="text-white drop-shadow-md hover:scale-105 transition-transform" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Home</a>
-            <a href="#trending-movies" class="hover:text-white hover:scale-105 transition-all">Movies</a>
-            <a href="#trending-series" class="hover:text-white hover:scale-105 transition-all">Series</a>
-            <a href="#action-movies" class="hover:text-white hover:scale-105 transition-all">Discover</a>
-            <a href="#" class="hover:text-white hover:scale-105 transition-all">List</a>
+        <!-- Main Navigation -->
+        <div class="hidden md:flex items-center gap-5 lg:gap-7 text-sm font-medium text-gray-300">
+            <a href="#" id="home-nav-btn" class="nav-link purple-glow active text-white hover:scale-105 transition-transform">
+                <i class="fa-solid fa-house mr-1.5"></i>Home
+            </a>
+            <a href="#" id="movies-nav-btn" class="nav-link purple-glow hover:text-white hover:scale-105 transition-all">
+                <i class="fa-solid fa-film mr-1.5"></i>Movies
+            </a>
+            <a href="#" id="series-nav-btn" class="nav-link purple-glow hover:text-white hover:scale-105 transition-all">
+                <i class="fa-solid fa-tv mr-1.5"></i>Series
+            </a>
+            <a href="#" id="discover-nav-btn" class="nav-link purple-glow hover:text-white hover:scale-105 transition-all">
+                <i class="fa-solid fa-compass mr-1.5"></i>Discover
+            </a>
+            <button id="list-nav-btn" class="nav-link purple-glow hover:text-white hover:scale-105 transition-all">
+                <i class="fa-solid fa-bookmark mr-1.5"></i>List
+            </button>
+            <button id="history-nav-btn" class="nav-link purple-glow hover:text-white hover:scale-105 transition-all">
+                <i class="fa-solid fa-clock-rotate-left mr-1.5"></i>History
+            </button>
         </div>
 
         <!-- Utility Icons -->
-        <div class="flex items-center gap-5 text-gray-300">
-            <button id="search-btn" class="hover:text-white transition text-sm focus:outline-none"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <button id="noti-btn" class="hover:text-white transition text-sm focus:outline-none"><i class="fa-regular fa-bell"></i></button>
-            <button id="settings-btn" class="hover:text-white transition text-sm focus:outline-none"><i class="fa-solid fa-gear"></i></button>
-            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-red-600 to-orange-500 cursor-pointer border border-gray-600 shadow-lg hover:scale-105 transition-transform"></div>
+        <div class="flex items-center gap-3 md:gap-4 text-gray-300">
+            <button id="search-btn" aria-label="Search" title="Search" class="nav-icon purple-glow hover:text-white transition focus:outline-none">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <button id="noti-btn" aria-label="Notifications" title="Notifications" class="nav-icon purple-glow hover:text-white transition focus:outline-none">
+                <i class="fa-regular fa-bell"></i>
+            </button>
+            <button id="settings-btn" aria-label="Settings" title="Settings" class="nav-icon purple-glow hover:text-white transition focus:outline-none">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+            <button id="profile-btn" aria-label="Profile" title="Profile" class="profile-avatar group hidden sm:flex items-center justify-center focus:outline-none" type="button">
+                <span class="profile-avatar-ring"></span>
+                <span class="profile-avatar-face"><i class="fa-solid fa-user text-[11px]"></i></span>
+            </button>
         </div>
     </nav>
 
@@ -136,14 +336,14 @@
                     <button id="hero-play-btn" class="bg-white text-black hover:bg-gray-200 px-8 py-3 rounded-full font-bold flex items-center gap-2 transition-all hover:scale-105 shadow-xl text-lg">
                         <i class="fa-solid fa-play"></i> Play
                     </button>
-                    <button class="bg-gray-500/40 hover:bg-gray-500/60 backdrop-blur-md border border-white/20 text-white w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-105 shadow-xl">
+                    <button id="hero-list-btn" class="bg-gray-500/40 hover:bg-purple-500/30 backdrop-blur-md border border-white/20 text-white w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-xl" title="Add to My List">
                         <i class="fa-solid fa-plus text-xl"></i>
                     </button>
                 </div>
             </div>
 
             <!-- Carousel Indicators -->
-            <div id="hero-dots" class="absolute bottom-8 right-12 z-20 hidden md:flex items-center gap-2">
+            <div id="hero-dots" class="absolute right-7 md:right-12 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-center gap-2">
                 <!-- Injected via JS -->
             </div>
         </header>
@@ -152,6 +352,40 @@
             <!-- JavaScript will inject slider rows here -->
         </main>
     </div>
+
+    <!-- SPA VIEWS -->
+    <section id="view-movies" class="app-view">
+        <div class="view-shell">
+            <div class="view-heading"><div><h1 class="view-title">Movies</h1><p class="view-subtitle">Browse popular, trending and highly rated movies.</p></div><span class="text-xs text-gray-500 uppercase tracking-[.25em]">Bentflix Cinema</span></div>
+            <div id="movies-view-grid" class="view-grid"></div>
+        </div>
+    </section>
+    <section id="view-series" class="app-view">
+        <div class="view-shell">
+            <div class="view-heading"><div><h1 class="view-title">Series</h1><p class="view-subtitle">Find trending and top-rated shows to binge.</p></div><span class="text-xs text-gray-500 uppercase tracking-[.25em]">Series Library</span></div>
+            <div id="series-view-grid" class="view-grid"></div>
+        </div>
+    </section>
+    <section id="view-discover" class="app-view">
+        <div class="view-shell">
+            <div class="view-heading"><div><h1 class="view-title">Discover</h1><p class="view-subtitle">Jump into a genre instead of scrolling the homepage.</p></div><span class="text-xs text-purple-300 uppercase tracking-[.25em]">Explore</span></div>
+            <div id="discover-view-grid" class="discover-grid"></div>
+        </div>
+    </section>
+    <section id="view-lists" class="app-view">
+        <div class="view-shell">
+            <div class="view-heading"><div><h1 class="view-title">My List</h1><p id="page-list-count" class="view-subtitle">Your saved movies and series, all in one place.</p></div><i class="fa-solid fa-bookmark text-4xl text-purple-400"></i></div>
+            <div id="page-list-results" class="view-grid"></div>
+            <div id="page-empty-list" class="empty-view hidden"><div><i class="fa-regular fa-bookmark text-5xl text-purple-400 mb-5"></i><h2 class="text-xl font-bold">Your list is empty</h2><p class="text-gray-500 mt-2">Use the + button on any title to save it here.</p></div></div>
+        </div>
+    </section>
+    <section id="view-history" class="app-view">
+        <div class="view-shell">
+            <div class="view-heading"><div><h1 class="view-title">Watch History</h1><p id="page-history-count" class="view-subtitle">Titles you recently opened.</p></div><i class="fa-solid fa-clock-rotate-left text-4xl text-purple-400"></i></div>
+            <div id="page-history-results" class="view-grid"></div>
+            <div id="page-empty-history" class="empty-view hidden"><div><i class="fa-solid fa-clock-rotate-left text-5xl text-purple-400 mb-5"></i><h2 class="text-xl font-bold">No watch history yet</h2><p class="text-gray-500 mt-2">Play a movie or series and it will appear here.</p></div></div>
+        </div>
+    </section>
 
     <!-- Player Modal -->
     <div id="player-modal" class="fixed inset-0 z-[100] bg-black hidden flex-col justify-center items-center opacity-0 transition-opacity duration-300">
@@ -211,38 +445,113 @@
         </div>
     </div>
 
+    <!-- My List Modal -->
+    <div id="list-modal" class="fixed inset-0 z-[95] bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl w-full max-w-5xl max-h-[85vh] p-6 shadow-2xl relative flex flex-col">
+            <div class="flex items-center justify-between pb-4 border-b border-neutral-800 mb-5">
+                <div>
+                    <h3 class="text-2xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-bookmark text-red-600"></i> My List
+                    </h3>
+                    <p id="list-count" class="text-xs text-gray-500 mt-1">0 titles saved</p>
+                </div>
+                <button id="close-list" class="text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div id="list-results" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 overflow-y-auto pr-1"></div>
+            <div id="empty-list" class="hidden flex-1 min-h-48 items-center justify-center text-center text-gray-500">
+                <div>
+                    <i class="fa-regular fa-bookmark text-4xl mb-3"></i>
+                    <p class="font-semibold text-gray-300">Your list is empty</p>
+                    <p class="text-sm mt-1">Press the + button on any movie or series to save it here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="history-modal" class="fixed inset-0 z-[95] bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl w-full max-w-5xl max-h-[85vh] p-6 shadow-2xl relative flex flex-col">
+            <div class="flex items-center justify-between pb-4 border-b border-neutral-800 mb-5">
+                <div>
+                    <h3 class="text-2xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-red-600"></i> Watch History
+                    </h3>
+                    <p id="history-count" class="text-xs text-gray-500 mt-1">0 titles watched</p>
+                </div>
+                <button id="close-history" class="text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div id="history-results" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 overflow-y-auto pr-1"></div>
+            <div id="empty-history" class="hidden flex-1 min-h-48 items-center justify-center text-center text-gray-500">
+                <div>
+                    <i class="fa-solid fa-clock-rotate-left text-4xl mb-3"></i>
+                    <p class="font-semibold text-gray-300">No watch history yet</p>
+                    <p class="text-sm mt-1">Movies and series you open will appear here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
-    <div id="settings-modal" class="fixed inset-0 z-[90] bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
-            <div class="flex items-center justify-between pb-4 border-b border-neutral-800 mb-6">
-                <h3 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-gear text-red-600"></i> Settings & Preferences</h3>
-                <button id="close-settings" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <div id="settings-modal" class="fixed inset-0 z-[90] bg-black/85 backdrop-blur-xl hidden flex items-center justify-center p-4 sm:p-6">
+        <div class="settings-panel w-full max-w-xl max-h-[88vh] overflow-hidden rounded-2xl border border-white/10 bg-[#111015] shadow-2xl relative">
+            <div class="relative px-6 sm:px-8 pt-6 pb-5 border-b border-white/10">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-white/[.06] border border-white/10 flex items-center justify-center">
+                            <i class="fa-solid fa-sliders text-purple-300 text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold tracking-tight">Settings</h3>
+                        </div>
+                    </div>
+                    <button id="close-settings" aria-label="Close settings" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-purple-500/15 hover:border-purple-400/30 transition-all">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <p class="text-sm text-gray-500 mt-3">Playback preferences.</p>
             </div>
-            <div class="space-y-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h4 class="font-semibold text-sm">Autoplay Trailers & Preview</h4>
-                        <p class="text-xs text-gray-400">Play video automatically when browsing.</p>
+
+            <div class="relative overflow-y-auto max-h-[calc(90vh-190px)] px-6 sm:px-8 py-6 space-y-5">
+                <div>
+                    <div class="flex items-center gap-2 mb-3 text-xs font-bold uppercase tracking-[.2em] text-gray-500">
+                        <i class="fa-solid fa-play text-purple-400"></i> Playback
                     </div>
-                    <input type="checkbox" checked class="w-5 h-5 accent-red-600 cursor-pointer">
-                </div>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h4 class="font-semibold text-sm">High Quality Streaming</h4>
-                        <p class="text-xs text-gray-400">Default to highest resolution available.</p>
+                    <div class="rounded-2xl border border-white/8 bg-white/[.035] overflow-hidden">
+                        <label class="settings-row flex items-center justify-between gap-4 p-4 sm:p-5 hover:bg-white/[.035] transition cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div class="settings-icon"><i class="fa-solid fa-forward"></i></div>
+                                <div><h4 class="font-semibold text-sm">Autoplay previews</h4><p class="text-xs text-gray-500 mt-1">Play previews automatically while browsing.</p></div>
+                            </div>
+                            <input id="setting-autoplay" type="checkbox" checked class="settings-toggle">
+                        </label>
+                        <div class="h-px bg-white/5 mx-5"></div>
+                        <label class="settings-row flex items-center justify-between gap-4 p-4 sm:p-5 hover:bg-white/[.035] transition cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div class="settings-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                                <div><h4 class="font-semibold text-sm">High quality streaming</h4><p class="text-xs text-gray-500 mt-1">Prefer the highest available video quality.</p></div>
+                            </div>
+                            <input id="setting-quality" type="checkbox" checked class="settings-toggle">
+                        </label>
+                        <div class="h-px bg-white/5 mx-5"></div>
+                        <label class="settings-row flex items-center justify-between gap-4 p-4 sm:p-5 hover:bg-white/[.035] transition cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div class="settings-icon"><i class="fa-solid fa-closed-captioning"></i></div>
+                                <div><h4 class="font-semibold text-sm">Subtitles</h4><p class="text-xs text-gray-500 mt-1">Show subtitles by default when available.</p></div>
+                            </div>
+                            <input id="setting-subtitles" type="checkbox" class="settings-toggle">
+                        </label>
                     </div>
-                    <input type="checkbox" checked class="w-5 h-5 accent-red-600 cursor-pointer">
                 </div>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h4 class="font-semibold text-sm">Subtitles Enabled</h4>
-                        <p class="text-xs text-gray-400">Show subtitles by default if available.</p>
-                    </div>
-                    <input type="checkbox" class="w-5 h-5 accent-red-600 cursor-pointer">
-                </div>
-            </div>
-            <div class="mt-8 pt-4 border-t border-neutral-800 flex justify-end">
-                <button id="save-settings" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-xl text-sm transition">Save Changes</button>
+
+            <div class="relative px-6 sm:px-8 py-5 border-t border-white/10 bg-black/10 flex items-center justify-between gap-4">
+                <span id="settings-status" class="text-xs text-gray-600">Changes apply to this browser.</span>
+                <button id="save-settings" class="group bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all shadow-[0_0_25px_rgba(168,85,247,.2)] hover:shadow-[0_0_35px_rgba(168,85,247,.35)] hover:-translate-y-0.5">
+                    <i class="fa-solid fa-check mr-2 group-hover:scale-110 transition-transform"></i>Save Changes
+                </button>
             </div>
         </div>
     </div>
@@ -255,6 +564,171 @@
         let heroItems = [];
         let currentHeroIndex = 0;
         let heroInterval = null;
+
+        const STORAGE_KEYS = {
+            list: 'bentflix_my_list',
+            history: 'bentflix_watch_history'
+        };
+
+        let myList = JSON.parse(localStorage.getItem(STORAGE_KEYS.list) || '[]');
+        let watchHistory = JSON.parse(localStorage.getItem(STORAGE_KEYS.history) || '[]');
+
+        function saveStoredData() {
+            localStorage.setItem(STORAGE_KEYS.list, JSON.stringify(myList));
+            localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(watchHistory));
+        }
+
+        function isInList(id, type) {
+            return myList.some(item => String(item.id) === String(id) && item.type === type);
+        }
+
+        function toggleList(media) {
+            const type = media.media_type || (media.first_air_date || media.name ? 'tv' : 'movie');
+            const title = media.title || media.name || media.original_title || media.original_name || 'Untitled';
+            const item = {
+                id: media.id,
+                type,
+                title,
+                poster_path: media.poster_path || null,
+                vote_average: media.vote_average || 0
+            };
+
+            if (isInList(item.id, type)) {
+                myList = myList.filter(saved => !(String(saved.id) === String(item.id) && saved.type === type));
+            } else {
+                myList.unshift(item);
+            }
+
+            saveStoredData();
+            renderList();
+            refreshAllListButtons();
+        }
+
+        function addToHistory(media) {
+            const type = media.media_type || (media.first_air_date || media.name ? 'tv' : 'movie');
+            const title = media.title || media.name || media.original_title || media.original_name || 'Untitled';
+            const item = {
+                id: media.id,
+                type,
+                title,
+                poster_path: media.poster_path || null,
+                vote_average: media.vote_average || 0
+            };
+
+            watchHistory = [
+                item,
+                ...watchHistory.filter(old => !(String(old.id) === String(item.id) && old.type === item.type))
+            ].slice(0, 30);
+
+            saveStoredData();
+            renderHistory();
+        }
+
+        function refreshAllListButtons() {
+            const heroButton = document.getElementById('hero-list-btn');
+            if (heroButton && heroItems[currentHeroIndex]) {
+                const heroMedia = heroItems[currentHeroIndex];
+                const heroSaved = isInList(heroMedia.id, 'movie');
+                heroButton.innerHTML = heroSaved
+                    ? '<i class="fa-solid fa-check text-xl"></i>'
+                    : '<i class="fa-solid fa-plus text-xl"></i>';
+                heroButton.title = heroSaved ? 'Remove from My List' : 'Add to My List';
+                heroButton.classList.toggle('bg-purple-600', heroSaved);
+                heroButton.classList.toggle('bg-purple-500/30', heroSaved);
+                heroButton.classList.toggle('border-purple-300/60', heroSaved);
+                heroButton.classList.toggle('shadow-[0_0_18px_rgba(168,85,247,.5)]', heroSaved);
+            }
+
+            document.querySelectorAll('[data-list-id]').forEach(button => {
+                const id = button.dataset.listId;
+                const type = button.dataset.listType;
+                const saved = isInList(id, type);
+                button.innerHTML = saved
+                    ? '<i class="fa-solid fa-check text-sm"></i>'
+                    : '<i class="fa-solid fa-plus text-sm"></i>';
+                button.title = saved ? 'Remove from My List' : 'Add to My List';
+                button.classList.toggle('bg-purple-600', saved);
+                button.classList.toggle('bg-purple-500/30', saved);
+                button.classList.toggle('border-purple-300/60', saved);
+                button.classList.toggle('text-white', saved);
+                button.classList.toggle('shadow-[0_0_14px_rgba(168,85,247,.45)]', saved);
+            });
+        }
+
+        function createSavedCard(item, removable = false, pageCard = false) {
+            const card = document.createElement('div');
+            card.className = 'view-card group/saved relative cursor-pointer rounded-xl overflow-hidden shadow-lg border border-white/5 hover:scale-105 transition-all bg-[#18181b]';
+
+            const poster = item.poster_path
+                ? `${IMAGE_BASE_URL}w500${item.poster_path}`
+                : 'https://placehold.co/500x750/18181b/ffffff?text=No+Poster';
+
+            card.innerHTML = `
+                <div class="aspect-[2/3] w-full relative">
+                    <img src="${poster}" alt="${item.title}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover/saved:opacity-100 transition-opacity flex flex-col justify-end p-3">
+                        <h4 class="text-white font-bold text-sm truncate">${item.title}</h4>
+                        <span class="text-[10px] text-gray-300 uppercase mt-1">${item.type}</span>
+                    </div>
+                    ${removable ? `<button class="remove-saved absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 text-white hover:bg-red-600 border border-white/20 flex items-center justify-center z-10" title="Remove"><i class="fa-solid fa-xmark"></i></button>` : ''}
+                </div>
+            `;
+
+            card.onclick = () => openPlayer(item.id, item.title, item.type);
+            const removeBtn = card.querySelector('.remove-saved');
+            if (removeBtn) {
+                removeBtn.onclick = (event) => {
+                    event.stopPropagation();
+                    toggleList(item);
+                };
+            }
+            return card;
+        }
+
+        function renderList() {
+            const results = document.getElementById('list-results');
+            const empty = document.getElementById('empty-list');
+            const count = document.getElementById('list-count');
+            const pageResults = document.getElementById('page-list-results');
+            const pageEmpty = document.getElementById('page-empty-list');
+            const pageCount = document.getElementById('page-list-count');
+
+            if (results) {
+                results.innerHTML = '';
+                count.textContent = `${myList.length} title${myList.length === 1 ? '' : 's'} saved`;
+                if (!myList.length) { empty.classList.remove('hidden'); empty.classList.add('flex'); }
+                else { empty.classList.add('hidden'); empty.classList.remove('flex'); myList.forEach(item => results.appendChild(createSavedCard(item, true))); }
+            }
+            if (pageResults) {
+                pageResults.innerHTML = '';
+                if (pageCount) pageCount.textContent = `${myList.length} saved title${myList.length === 1 ? '' : 's'} — movies and series you want to watch.`;
+                if (!myList.length) { pageResults.classList.add('hidden'); pageEmpty.classList.remove('hidden'); }
+                else { pageResults.classList.remove('hidden'); pageEmpty.classList.add('hidden'); myList.forEach(item => pageResults.appendChild(createSavedCard(item, true, true))); }
+            }
+        }
+
+        function renderHistory() {
+            const results = document.getElementById('history-results');
+            const empty = document.getElementById('empty-history');
+            const count = document.getElementById('history-count');
+            const pageResults = document.getElementById('page-history-results');
+            const pageEmpty = document.getElementById('page-empty-history');
+            const pageCount = document.getElementById('page-history-count');
+
+            if (results) {
+                results.innerHTML = '';
+                count.textContent = `${watchHistory.length} title${watchHistory.length === 1 ? '' : 's'} watched`;
+                if (!watchHistory.length) { empty.classList.remove('hidden'); empty.classList.add('flex'); }
+                else { empty.classList.add('hidden'); empty.classList.remove('flex'); watchHistory.forEach(item => results.appendChild(createSavedCard(item, false))); }
+            }
+            if (pageResults) {
+                pageResults.innerHTML = '';
+                if (pageCount) pageCount.textContent = `${watchHistory.length} recently watched title${watchHistory.length === 1 ? '' : 's'}.`;
+                if (!watchHistory.length) { pageResults.classList.add('hidden'); pageEmpty.classList.remove('hidden'); }
+                else { pageResults.classList.remove('hidden'); pageEmpty.classList.add('hidden'); watchHistory.forEach(item => pageResults.appendChild(createSavedCard(item, false, true))); }
+            }
+        }
+
 
         const categorySections = [
             { id: 'trending-movies', title: 'Trending Movies <span class="underline decoration-2 underline-offset-4 decoration-gray-600">This Week</span>', endpoint: '/trending/movie/week', type: 'movie' },
@@ -273,6 +747,7 @@
         const heroYear = document.getElementById('hero-year');
         const heroTypeBadge = document.getElementById('hero-type-badge');
         const heroPlayBtn = document.getElementById('hero-play-btn');
+        const heroListBtn = document.getElementById('hero-list-btn');
         const heroDots = document.getElementById('hero-dots');
         const categoriesContainer = document.getElementById('categories-container');
         const playerModal = document.getElementById('player-modal');
@@ -338,7 +813,28 @@
             heroTypeBadge.textContent = 'Movie';
             heroTypeBadge.classList.remove('hidden');
 
-            heroPlayBtn.onclick = () => openPlayer(media.id, title, 'movie');
+            heroListBtn.onclick = (event) => {
+                event.stopPropagation();
+                toggleList({
+                    id: media.id,
+                    title,
+                    media_type: 'movie',
+                    poster_path: media.poster_path,
+                    vote_average: media.vote_average
+                });
+                refreshAllListButtons();
+            };
+
+            heroPlayBtn.onclick = () => {
+                addToHistory({
+                    id: media.id,
+                    title,
+                    media_type: 'movie',
+                    poster_path: media.poster_path,
+                    vote_average: media.vote_average
+                });
+                openPlayer(media.id, title, 'movie');
+            };
 
             const dots = heroDots.querySelectorAll('button');
             dots.forEach((dot, idx) => {
@@ -410,7 +906,8 @@
                         card.innerHTML = `
                             <div class="aspect-[2/3] w-full relative">
                                 <img src="${posterUrl}" alt="${title}" class="w-full h-full object-cover" loading="lazy">
-                                <button class="absolute top-2 right-2 w-8 h-8 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-white hover:text-black transition-colors z-20 shadow-md opacity-0 group-hover/card:opacity-100">
+                                <button class="list-toggle absolute top-2 right-2 w-8 h-8 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-white hover:text-black transition-colors z-20 shadow-md opacity-0 group-hover/card:opacity-100"
+                                        data-list-id="${media.id}" data-list-type="${category.type}" title="Add to My List">
                                     <i class="fa-solid fa-plus text-sm"></i>
                                 </button>
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
@@ -424,8 +921,31 @@
                             </div>
                         `;
                         
-                        card.onclick = () => openPlayer(media.id, title, category.type);
+                        const listButton = card.querySelector('.list-toggle');
+                        listButton.onclick = (event) => {
+                            event.stopPropagation();
+                            toggleList({
+                                id: media.id,
+                                title: title,
+                                media_type: category.type,
+                                poster_path: media.poster_path,
+                                vote_average: media.vote_average
+                            });
+                        };
+
+                        card.onclick = () => {
+                            addToHistory({
+                                id: media.id,
+                                title: title,
+                                media_type: category.type,
+                                poster_path: media.poster_path,
+                                vote_average: media.vote_average
+                            });
+                            openPlayer(media.id, title, category.type);
+                        };
+
                         track.appendChild(card);
+                        refreshAllListButtons();
                     });
 
                     setupSliderControls(section, track);
@@ -458,6 +978,85 @@
             track.dispatchEvent(new Event('scroll'));
         }
 
+        // --- Separate SPA Views ---
+        let currentView = 'home';
+        let loadedViewData = {};
+
+        function setActiveNavByView(view) {
+            document.querySelectorAll('.nav-link').forEach(item => item.classList.remove('active'));
+            const map = { home:'home-nav-btn', movies:'movies-nav-btn', series:'series-nav-btn', discover:'discover-nav-btn', lists:'list-nav-btn', history:'history-nav-btn' };
+            const el = document.getElementById(map[view]);
+            if (el) el.classList.add('active');
+        }
+
+        function switchView(view) {
+            currentView = view;
+            const home = document.getElementById('main-content');
+            const views = document.querySelectorAll('.app-view');
+            home.classList.toggle('home-hidden', view !== 'home');
+            views.forEach(v => v.classList.remove('view-active'));
+            if (view !== 'home') {
+                const target = document.getElementById(`view-${view}`);
+                if (target) { target.classList.add('view-active'); void target.offsetWidth; }
+            }
+            setActiveNavByView(view);
+            window.scrollTo({top:0, behavior:'smooth'});
+            if (view === 'lists') renderList();
+            if (view === 'history') renderHistory();
+            if (view === 'movies') loadMoviesView();
+            if (view === 'series') loadSeriesView();
+            if (view === 'discover') loadDiscoverView();
+        }
+
+        function createViewCard(media, type) {
+            if (!media || !media.poster_path) return null;
+            const title = media.title || media.name || media.original_title || media.original_name || 'Untitled';
+            const card = document.createElement('div');
+            card.className = 'view-card group relative cursor-pointer rounded-2xl overflow-hidden shadow-xl border border-white/5 hover:scale-[1.035] hover:-translate-y-1 transition-all duration-300 bg-[#18181b]';
+            const rating = media.vote_average ? media.vote_average.toFixed(1) : 'NR';
+            card.innerHTML = `<div class="aspect-[2/3] relative"><img src="${IMAGE_BASE_URL}w500${media.poster_path}" alt="${title}" class="w-full h-full object-cover" loading="lazy"><button class="view-list-toggle absolute top-3 right-3 w-9 h-9 bg-black/65 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 z-20 hover:bg-white hover:text-black transition" data-list-id="${media.id}" data-list-type="${type}"><i class="fa-solid fa-plus text-xs"></i></button><div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end"><div class="self-center mb-auto mt-auto text-white text-5xl"><i class="fa-solid fa-circle-play"></i></div><h3 class="font-bold text-sm truncate">${title}</h3><div class="flex gap-2 items-center mt-1"><span class="text-xs text-green-400"><i class="fa-solid fa-star text-yellow-500"></i> ${rating}</span><span class="text-[10px] uppercase border border-white/30 rounded px-1">${type}</span></div></div></div>`;
+            card.querySelector('.view-list-toggle').onclick = e => { e.stopPropagation(); toggleList({id:media.id,title,media_type:type,poster_path:media.poster_path,vote_average:media.vote_average}); };
+            card.onclick = () => { addToHistory({id:media.id,title,media_type:type,poster_path:media.poster_path,vote_average:media.vote_average}); openPlayer(media.id,title,type); };
+            return card;
+        }
+
+        async function loadGridView(containerId, endpoint, type) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            if (loadedViewData[containerId]) { refreshAllListButtons(); return; }
+            container.innerHTML = Array(12).fill(0).map(() => '<div class="aspect-[2/3] rounded-2xl bg-neutral-900 animate-pulse border border-white/5"></div>').join('');
+            try {
+                const separator = endpoint.includes('?') ? '&' : '?';
+                const res = await fetch(`${TMDB_BASE_URL}${endpoint}${separator}api_key=${TMDB_API_KEY}`);
+                const data = await res.json();
+                container.innerHTML = '';
+                (data.results || []).filter(x => x.poster_path).forEach(media => { const card=createViewCard(media,type); if(card) container.appendChild(card); });
+                loadedViewData[containerId] = true;
+                refreshAllListButtons();
+            } catch (e) { container.innerHTML='<div class="col-span-full text-center text-red-400 py-20">Failed to load this view. Try again.</div>'; console.error(e); }
+        }
+
+        function loadMoviesView(){ return loadGridView('movies-view-grid','/discover/movie?sort_by=popularity.desc','movie'); }
+        function loadSeriesView(){ return loadGridView('series-view-grid','/discover/tv?sort_by=popularity.desc','tv'); }
+
+        async function loadDiscoverView(){
+            const container=document.getElementById('discover-view-grid');
+            if (!container || loadedViewData.discover) return;
+            const genres=[['Action',28,'movie'],['Adventure',12,'movie'],['Comedy',35,'movie'],['Drama',18,'movie'],['Horror',27,'movie'],['Science Fiction',878,'movie'],['Animation',16,'movie'],['Crime',80,'movie'],['Mystery',9648,'movie'],['Thriller',53,'movie'],['TV Drama',18,'tv'],['TV Comedy',35,'tv']];
+            container.innerHTML=genres.map(([name,id,type])=>`<button class="discover-tile text-left p-7 group" data-genre="${id}" data-genre-type="${type}"><div class="relative z-10"><span class="text-xs uppercase tracking-[.25em] text-purple-300">Browse genre</span><h2 class="text-2xl md:text-3xl font-black mt-3">${name}</h2><p class="text-gray-500 mt-2">Explore ${name.toLowerCase()} ${type === 'tv' ? 'series' : 'movies'}.</p><span class="inline-flex items-center gap-2 mt-6 text-sm font-bold text-white group-hover:text-purple-300 transition">Explore <i class="fa-solid fa-arrow-right"></i></span></div></button>`).join('');
+            container.querySelectorAll('[data-genre]').forEach(tile=>tile.onclick=()=>openGenreView(tile.dataset.genre,tile.dataset.genreType,tile.querySelector('h2').textContent));
+            loadedViewData.discover=true;
+        }
+
+        async function openGenreView(id,type,name){
+            const container=document.getElementById('discover-view-grid');
+            container.innerHTML='<div class="col-span-full"><div class="flex items-center gap-3 mb-6"><button id="genre-back" class="purple-glow px-4 py-2 rounded-full border border-white/10 bg-white/5"><i class="fa-solid fa-arrow-left"></i> Back</button><h2 class="text-2xl font-bold">'+name+'</h2></div><div id="genre-results" class="view-grid"></div></div>';
+            document.getElementById('genre-back').onclick=()=>{loadedViewData.discover=false;loadDiscoverView();};
+            const results=document.getElementById('genre-results');
+            const endpoint=type==='tv'?`/discover/tv?with_genres=${id}&sort_by=popularity.desc`:`/discover/movie?with_genres=${id}&sort_by=popularity.desc`;
+            await loadGridView('genre-results',endpoint,type);
+        }
+
         // --- Header Modals Logic ---
         function setupHeaderModals() {
             const searchBtn = document.getElementById('search-btn');
@@ -474,12 +1073,67 @@
             const settingsModal = document.getElementById('settings-modal');
             const closeSettings = document.getElementById('close-settings');
             const saveSettings = document.getElementById('save-settings');
+            const settingAutoplay = document.getElementById('setting-autoplay');
+            const settingQuality = document.getElementById('setting-quality');
+            const settingSubtitles = document.getElementById('setting-subtitles');
+            const settingsStatus = document.getElementById('settings-status');
 
-            searchBtn.onclick = () => {
-                searchModal.classList.remove('hidden');
-                searchInput.focus();
+            function loadSettings() {
+                try {
+                    const saved = JSON.parse(localStorage.getItem('bentflix_settings') || '{}');
+                    if (typeof saved.autoplay === 'boolean') settingAutoplay.checked = saved.autoplay;
+                    if (typeof saved.quality === 'boolean') settingQuality.checked = saved.quality;
+                    if (typeof saved.subtitles === 'boolean') settingSubtitles.checked = saved.subtitles;
+                } catch (e) {}
+            }
+
+            function saveSettingsData() {
+                localStorage.setItem('bentflix_settings', JSON.stringify({
+                    autoplay: settingAutoplay.checked,
+                    quality: settingQuality.checked,
+                    subtitles: settingSubtitles.checked
+                }));
+                settingsStatus.textContent = 'Saved on this device ✓';
+                settingsStatus.classList.remove('text-gray-600');
+                settingsStatus.classList.add('text-purple-300');
+            }
+
+            function openAnimatedModal(modal, focusElement) {
+                if (!modal) return;
+                modal.classList.remove('hidden', 'bentflix-modal-closing');
+                void modal.offsetWidth;
+                modal.classList.add('bentflix-modal-open');
+                if (focusElement) setTimeout(() => focusElement.focus(), 80);
+            }
+            function closeAnimatedModal(modal) {
+                if (!modal || modal.classList.contains('hidden')) return;
+                modal.classList.remove('bentflix-modal-open');
+                modal.classList.add('bentflix-modal-closing');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('bentflix-modal-closing');
+                }, 200);
+            }
+
+            settingsBtn.onclick = () => {
+                loadSettings();
+                settingsStatus.textContent = 'Changes apply to this browser.';
+                settingsStatus.className = 'text-xs text-gray-600';
+                openAnimatedModal(settingsModal);
             };
-            closeSearch.onclick = () => searchModal.classList.add('hidden');
+            closeSettings.onclick = () => closeAnimatedModal(settingsModal);
+            settingsModal.onclick = (e) => {
+                if (e.target === settingsModal) closeAnimatedModal(settingsModal);
+            };
+            saveSettings.onclick = () => {
+                saveSettingsData();
+                setTimeout(() => closeAnimatedModal(settingsModal), 500);
+            };
+
+            loadSettings();
+
+            searchBtn.onclick = () => openAnimatedModal(searchModal, searchInput);
+            closeSearch.onclick = () => closeAnimatedModal(searchModal);
             
             let searchTimeout = null;
             searchInput.oninput = (e) => {
@@ -501,16 +1155,40 @@
                                 const type = media.media_type || 'movie';
                                 const card = document.createElement('div');
                                 card.className = 'cursor-pointer rounded-xl overflow-hidden shadow-lg border border-white/5 hover:scale-105 transition-all bg-[#18181b]';
+                                if (type !== 'movie' && type !== 'tv') return;
+
                                 card.innerHTML = `
                                     <div class="aspect-[2/3] w-full relative">
                                         <img src="${IMAGE_BASE_URL}w300${media.poster_path}" class="w-full h-full object-cover">
+                                        <button class="search-list-toggle absolute top-2 right-2 w-8 h-8 bg-black/70 rounded-full text-white border border-white/20 z-20" data-list-id="${media.id}" data-list-type="${type}" title="Add to My List">
+                                            <i class="fa-solid fa-plus text-xs"></i>
+                                        </button>
                                         <div class="absolute inset-0 bg-black/40 flex items-end p-3">
                                             <span class="text-xs font-bold text-white truncate">${title}</span>
                                         </div>
                                     </div>
                                 `;
+
+                                card.querySelector('.search-list-toggle').onclick = (event) => {
+                                    event.stopPropagation();
+                                    toggleList({
+                                        id: media.id,
+                                        title,
+                                        media_type: type,
+                                        poster_path: media.poster_path,
+                                        vote_average: media.vote_average
+                                    });
+                                };
+
                                 card.onclick = () => {
-                                    searchModal.classList.add('hidden');
+                                    closeAnimatedModal(searchModal);
+                                    addToHistory({
+                                        id: media.id,
+                                        title,
+                                        media_type: type,
+                                        poster_path: media.poster_path,
+                                        vote_average: media.vote_average
+                                    });
                                     openPlayer(media.id, title, type);
                                 };
                                 searchResults.appendChild(card);
@@ -522,14 +1200,31 @@
                 }, 400);
             };
 
-            notiBtn.onclick = () => notiModal.classList.remove('hidden');
-            closeNoti.onclick = () => notiModal.classList.add('hidden');
-            notiModal.onclick = (e) => { if (e.target === notiModal) notiModal.classList.add('hidden'); };
+            notiBtn.onclick = () => openAnimatedModal(notiModal);
+            closeNoti.onclick = () => closeAnimatedModal(notiModal);
+            notiModal.onclick = (e) => { if (e.target === notiModal) closeAnimatedModal(notiModal); };
 
-            settingsBtn.onclick = () => settingsModal.classList.remove('hidden');
-            closeSettings.onclick = () => settingsModal.classList.add('hidden');
-            saveSettings.onclick = () => settingsModal.classList.add('hidden');
-            settingsModal.onclick = (e) => { if (e.target === settingsModal) settingsModal.classList.add('hidden'); };
+            // Main navigation is a real single-page view switcher, not homepage scrolling.
+            const navMap = {
+                'home-nav-btn':'home', 'movies-nav-btn':'movies', 'series-nav-btn':'series',
+                'discover-nav-btn':'discover', 'list-nav-btn':'lists', 'history-nav-btn':'history'
+            };
+            Object.entries(navMap).forEach(([id,view])=>{
+                const el=document.getElementById(id);
+                if(el) el.onclick=(e)=>{ e.preventDefault(); switchView(view); };
+            });
+            const brand=document.querySelector('nav a[href="#"]');
+            if(brand) brand.onclick=(e)=>{e.preventDefault();switchView('home');};
+
+            // --- Account System ---
+            const profileBtn = document.getElementById('profile-btn');
+            // Profile is currently a visual avatar area only.
+            profileBtn.onclick = () => {
+                profileBtn.classList.add('profile-avatar-pop');
+                setTimeout(() => profileBtn.classList.remove('profile-avatar-pop'), 260);
+            };
+
+            settingsModal.onclick = (e) => { if (e.target === settingsModal) closeAnimatedModal(settingsModal); };
         }
 
         // --- Video Player Overlay Logic ---
@@ -567,10 +1262,16 @@
                 document.getElementById('search-modal').classList.add('hidden');
                 document.getElementById('noti-modal').classList.add('hidden');
                 document.getElementById('settings-modal').classList.add('hidden');
+                document.getElementById('list-modal').classList.add('hidden');
+                document.getElementById('history-modal').classList.add('hidden');
             }
         });
 
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', () => {
+            renderList();
+            renderHistory();
+            init();
+        });
     </script>
 </body>
 </html>
