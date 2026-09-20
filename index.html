@@ -75,10 +75,12 @@
 <body class="antialiased min-h-screen flex flex-col relative">
 
     <nav class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 glass-nav rounded-full px-6 py-3 flex items-center justify-between gap-8 md:gap-12 w-[92%] max-w-6xl shadow-2xl transition-all duration-300 hover:bg-black/80">
-        <!-- Brand / Logo -->
-        <a href="#" class="flex items-center gap-2 text-white hover:text-red-500 transition-colors duration-300" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-            <i class="fa-solid fa-rocket text-xl text-red-600"></i>
-            <span class="font-extrabold text-lg tracking-tight hidden sm:inline">BENTFLIX</span>
+        <!-- Brand / Custom Logos -->
+        <a href="#" class="flex items-center gap-3 hover:scale-105 transition-transform duration-300" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            <!-- Folded B Logo Icon -->
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" data-real-src="image_8.png" alt="B Logo" class="w-8 h-8 object-contain rounded-md shadow-md" style="content:url('image_8.png');" />
+            <!-- Bentflix Curved Text Logo -->
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" data-real-src="image_7.png" alt="Bentflix" class="h-6 object-contain hidden sm:inline" style="content:url('image_7.png');" />
         </a>
 
         <!-- Main Links -->
@@ -338,7 +340,6 @@
 
             heroPlayBtn.onclick = () => openPlayer(media.id, title, 'movie');
 
-            // Update dot active states
             const dots = heroDots.querySelectorAll('button');
             dots.forEach((dot, idx) => {
                 dot.className = `w-3 h-3 rounded-full transition-all ${idx === index ? 'bg-white w-8' : 'bg-white/40 hover:bg-white/70'}`;
@@ -474,7 +475,6 @@
             const closeSettings = document.getElementById('close-settings');
             const saveSettings = document.getElementById('save-settings');
 
-            // Search Modal Handlers
             searchBtn.onclick = () => {
                 searchModal.classList.remove('hidden');
                 searchInput.focus();
@@ -522,12 +522,10 @@
                 }, 400);
             };
 
-            // Notification Handlers
             notiBtn.onclick = () => notiModal.classList.remove('hidden');
             closeNoti.onclick = () => notiModal.classList.add('hidden');
             notiModal.onclick = (e) => { if (e.target === notiModal) notiModal.classList.add('hidden'); };
 
-            // Settings Handlers
             settingsBtn.onclick = () => settingsModal.classList.remove('hidden');
             closeSettings.onclick = () => settingsModal.classList.add('hidden');
             saveSettings.onclick = () => settingsModal.classList.add('hidden');
