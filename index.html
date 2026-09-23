@@ -258,13 +258,52 @@
     .details-backdrop::before { content:""; position:absolute; inset:0; background: linear-gradient(90deg,#09090b 0%,rgba(9,9,11,.88) 34%,rgba(9,9,11,.45) 68%,rgba(9,9,11,.9) 100%), linear-gradient(0deg,#09090b 0%,transparent 55%,rgba(0,0,0,.15) 100%); }
     .details-content { position:relative; z-index:2; }
     .details-poster { box-shadow: 0 25px 70px rgba(0,0,0,.6); }
-    .details-stat { background: rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.08); backdrop-filter:blur(12px); }
+    .details-stat { width:104px; height:104px; border-radius:9999px; background:rgba(15,15,20,.72); border:1px solid rgba(255,255,255,.10); backdrop-filter:blur(16px); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:12px; box-shadow:0 10px 30px rgba(0,0,0,.28); transition:transform .22s ease,border-color .22s ease,background .22s ease; }
+    .details-stat:hover { transform:translateY(-3px); border-color:rgba(168,85,247,.55); background:rgba(28,20,38,.82); }
+    .details-stat > div:first-child { font-size:9px !important; font-weight:500 !important; letter-spacing:.12em !important; line-height:1.1; }
+    .details-stat > div:last-child { font-family:'Inter',sans-serif !important; font-weight:600 !important; letter-spacing:-.02em !important; line-height:1.15; margin-top:7px !important; }
+    .details-stat .text-xl { font-size:17px !important; }
+    .details-stat .text-sm { font-size:12px !important; }
+    .details-stat .uppercase { text-transform:uppercase; }
+    .details-title, #details-title { font-family:'Inter',sans-serif !important; font-weight:700 !important; letter-spacing:-.035em !important; }
+    #details-tagline, #details-overview { font-family:'Inter',sans-serif !important; font-weight:400 !important; letter-spacing:-.01em; }
+    .details-page button, .details-page span, .details-page p, .details-page h1, .details-page h2, .details-page h3 { font-family:'Inter',sans-serif; }
     .details-recommendation { transform: translateY(0); transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
     .details-recommendation:hover { transform:translateY(-6px); border-color:rgba(168,85,247,.55); box-shadow:0 18px 40px rgba(0,0,0,.35); }
+    .details-cast-card { flex:0 0 120px; }
+    .details-cast-card img { transition: transform .3s ease, filter .3s ease; }
+    .details-cast-avatar { width: 92px; height: 92px; border-radius: 9999px; overflow:hidden; margin:0 auto; border:1px solid rgba(255,255,255,.12); box-shadow:0 10px 30px rgba(0,0,0,.35); }
+    .details-cast-avatar img { width:100%; height:100%; object-fit:cover; }
+    .details-cast-card:hover img { transform:scale(1.04); filter:brightness(1.12); }
+    .watched-badge { background:rgba(168,85,247,.18); border-color:rgba(192,132,252,.45); color:#e9d5ff; }
+     .watched-badge { background:rgba(168,85,247,.18); border-color:rgba(192,132,252,.45); color:#e9d5ff; }
     .details-page-enter { animation: detailsPageIn .42s cubic-bezier(.22,1,.36,1) both; }
     @keyframes detailsPageIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
     @media (max-width: 768px) { .details-backdrop { min-height: 760px; background-position:center top; } .details-backdrop::before { background:linear-gradient(180deg,rgba(9,9,11,.35) 0%,rgba(9,9,11,.7) 42%,#09090b 78%); } }
 
+
+        .watch-circle-btn {
+            width: 36px !important;
+            height: 36px !important;
+            min-width: 36px !important;
+            padding: 0 !important;
+            border-radius: 9999px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0 !important;
+            font-size: 0 !important;
+            line-height: 1 !important;
+            z-index: 30 !important;
+        }
+        .watch-circle-btn i { font-size: 13px !important; }
+        .watch-circle-btn:hover { transform: scale(1.06); }
+        #details-watched.watch-circle-btn {
+            width: 44px !important;
+            height: 44px !important;
+            min-width: 44px !important;
+        }
+        #details-watched.watch-circle-btn i { font-size: 15px !important; }
 </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col relative">
@@ -429,26 +468,33 @@
                             <div class="flex flex-wrap items-center gap-3 mt-6">
                                 <button id="details-play" class="inline-flex items-center gap-2 rounded-xl bg-white text-black px-6 py-3 font-bold hover:bg-gray-200 hover:scale-[1.02] transition"><i class="fa-solid fa-play"></i> Play Now</button>
                                 <button id="details-list" class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-black/35 px-5 py-3 font-bold text-white backdrop-blur-md hover:bg-purple-500/20 hover:border-purple-400/40 transition"><i class="fa-solid fa-plus"></i> My List</button>
+                                <button id="details-watched" class="watch-circle-btn rounded-full border border-white/15 bg-black/35 text-white backdrop-blur-md hover:bg-purple-500/20 hover:border-purple-400/40 transition"><i class="fa-regular fa-eye-slash"></i></button>
                             </div>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-7 max-w-3xl">
+                            <div class="flex flex-wrap items-center gap-3 mt-7 max-w-5xl">
                                 <div class="details-stat rounded-xl p-3"><div class="text-[10px] uppercase tracking-widest text-gray-500">Rating</div><div id="details-rating" class="text-xl font-black text-white mt-1"></div></div>
                                 <div class="details-stat rounded-xl p-3"><div class="text-[10px] uppercase tracking-widest text-gray-500">Votes</div><div id="details-votes" class="text-xl font-black text-white mt-1"></div></div>
+                                <div class="details-stat rounded-xl p-3"><div class="text-[10px] uppercase tracking-widest text-gray-500">Released</div><div id="details-release-date" class="text-sm font-black text-white mt-2"></div></div>
+                                <div class="details-stat rounded-xl p-3"><div class="text-[10px] uppercase tracking-widest text-gray-500">Runtime</div><div id="details-runtime-stat" class="text-sm font-black text-white mt-2"></div></div>
+                                <div class="details-stat rounded-xl p-3"><div class="text-[10px] uppercase tracking-widest text-gray-500">Quality</div><div id="details-quality" class="text-sm font-black text-white mt-2">Up to HD</div></div>
                                 <div class="details-stat rounded-xl p-3"><div class="text-[10px] uppercase tracking-widest text-gray-500">Language</div><div id="details-language" class="text-xl font-black text-white mt-1 uppercase"></div></div>
-                                <div class="details-stat rounded-xl p-3"><div class="text-[10px] uppercase tracking-widest text-gray-500">Popularity</div><div id="details-popularity" class="text-xl font-black text-white mt-1"></div></div>
                             </div>
                         </div>
                     </div>
                     <div class="mt-10 max-w-4xl lg:ml-[328px]">
                         <div class="flex flex-wrap gap-2 mb-5" id="details-genres"></div>
-                        <h2 class="text-xl font-bold text-white mb-2">Overview</h2>
                         <p id="details-overview" class="text-gray-300 leading-7 text-sm md:text-base"></p>
+                    </div>
+                    <div class="mt-12 lg:ml-[328px]">
+                        <div class="flex items-end justify-between gap-4 mb-5">
+                            <div><h2 class="text-2xl font-black">Cast</h2></div>
+                        </div>
+                        <div id="details-cast" class="flex gap-4 overflow-x-auto hide-scrollbar pb-3"></div>
                     </div>
                 </div>
             </div>
             <div class="view-shell py-12">
                 <div class="flex items-end justify-between gap-4 mb-6">
-                    <div><span class="text-xs uppercase tracking-[.25em] text-purple-300">Because you watched this</span><h2 class="text-2xl md:text-3xl font-black mt-1">More like this</h2></div>
-                    <span class="text-xs text-gray-500 hidden sm:block">Recommended for you</span>
+                    <div><h2 class="text-2xl md:text-3xl font-black">More Like This</h2></div>
                 </div>
                 <div id="details-recommendations" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"></div>
                 <div id="details-no-recommendations" class="hidden py-14 text-center text-gray-500">No recommendations found for this title.</div>
@@ -642,6 +688,17 @@
         let myList = JSON.parse(localStorage.getItem(STORAGE_KEYS.list) || '[]');
         let watchHistory = JSON.parse(localStorage.getItem(STORAGE_KEYS.history) || '[]');
 
+        function isWatched(id, type) { return watchHistory.some(item => String(item.id) === String(id) && item.type === type); }
+        function markAsWatched(media) { addToHistory(media); refreshWatchedButtons(); }
+        function refreshWatchedButtons() {
+            document.querySelectorAll('[data-watch-id]').forEach(button => {
+                const watched = isWatched(button.dataset.watchId, button.dataset.watchType);
+                button.innerHTML = watched ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-regular fa-eye-slash"></i>';
+                button.classList.toggle('watched-badge', watched);
+                button.classList.toggle('border-purple-400/50', watched);
+            });
+        }
+
         function saveStoredData() {
             localStorage.setItem(STORAGE_KEYS.list, JSON.stringify(myList));
             localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(watchHistory));
@@ -722,6 +779,7 @@
                 button.classList.toggle('text-white', saved);
                 button.classList.toggle('shadow-[0_0_14px_rgba(168,85,247,.45)]', saved);
             });
+            refreshWatchedButtons();
         }
 
         function createSavedCard(item, removable = false, pageCard = false) {
@@ -740,10 +798,13 @@
                         <span class="text-[10px] text-gray-300 uppercase mt-1">${item.type}</span>
                     </div>
                     ${removable ? `<button class="remove-saved absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 text-white hover:bg-red-600 border border-white/20 flex items-center justify-center z-10" title="Remove"><i class="fa-solid fa-xmark"></i></button>` : ''}
+                    <button class="card-watch-btn watch-circle-btn absolute bottom-14 left-2 z-50 rounded-full bg-black/70 backdrop-blur-md border border-white/15 text-white font-semibold hover:bg-purple-500/25" data-watch-id="${item.id}" data-watch-type="${item.type}"><i class="fa-regular fa-eye-slash"></i></button>
                 </div>
             `;
 
             card.onclick = () => openDetails(item.id, item.type);
+            const watchBtn = card.querySelector('.card-watch-btn');
+            if (watchBtn) watchBtn.onclick = (event) => { event.stopPropagation(); markAsWatched(item); };
             const removeBtn = card.querySelector('.remove-saved');
             if (removeBtn) {
                 removeBtn.onclick = (event) => {
@@ -978,10 +1039,11 @@
                         card.innerHTML = `
                             <div class="aspect-[2/3] w-full relative">
                                 <img src="${posterUrl}" alt="${title}" class="w-full h-full object-cover" loading="lazy">
-                                <button class="list-toggle absolute top-2 right-2 w-8 h-8 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-white hover:text-black transition-colors z-20 shadow-md opacity-0 group-hover/card:opacity-100"
+                                <button class="list-toggle absolute top-2 right-2 w-8 h-8 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-purple-500/30 transition-colors z-20 shadow-md opacity-0 group-hover/card:opacity-100"
                                         data-list-id="${media.id}" data-list-type="${category.type}" title="Add to My List">
                                     <i class="fa-solid fa-plus text-sm"></i>
                                 </button>
+                                <button class="category-watch-toggle watch-circle-btn absolute bottom-14 left-2 z-50 rounded-full bg-black/70 backdrop-blur-md border border-white/15 text-white font-semibold opacity-0 group-hover/card:opacity-100 hover:bg-purple-500/25" data-watch-id="${media.id}" data-watch-type="${category.type}"><i class="fa-regular fa-eye-slash"></i></button>
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
                                     <i class="fa-solid fa-circle-play text-4xl text-white mb-auto mt-auto self-center shadow-lg transform translate-y-4 group-hover/card:translate-y-0 transition-transform duration-300 hover:text-red-500"></i>
                                     <h3 class="text-white font-bold text-sm truncate drop-shadow-md">${title}</h3>
@@ -994,6 +1056,12 @@
                         `;
                         
                         const listButton = card.querySelector('.list-toggle');
+                        const categoryWatchButton = card.querySelector('.category-watch-toggle');
+                        categoryWatchButton.onclick = (event) => {
+                            event.stopPropagation();
+                            markAsWatched({ id: media.id, title, media_type: category.type, poster_path: media.poster_path, vote_average: media.vote_average });
+                        };
+
                         listButton.onclick = (event) => {
                             event.stopPropagation();
                             toggleList({
@@ -1078,8 +1146,9 @@
             const card = document.createElement('div');
             card.className = 'view-card group relative cursor-pointer rounded-2xl overflow-hidden shadow-xl border border-white/5 hover:scale-[1.035] hover:-translate-y-1 transition-all duration-300 bg-[#18181b]';
             const rating = media.vote_average ? media.vote_average.toFixed(1) : 'NR';
-            card.innerHTML = `<div class="aspect-[2/3] relative"><img src="${IMAGE_BASE_URL}w500${media.poster_path}" alt="${title}" class="w-full h-full object-cover" loading="lazy"><button class="view-list-toggle absolute top-3 right-3 w-9 h-9 bg-black/65 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 z-20 hover:bg-white hover:text-black transition" data-list-id="${media.id}" data-list-type="${type}"><i class="fa-solid fa-plus text-xs"></i></button><div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end"><div class="self-center mb-auto mt-auto text-white text-5xl"><i class="fa-solid fa-circle-play"></i></div><h3 class="font-bold text-sm truncate">${title}</h3><div class="flex gap-2 items-center mt-1"><span class="text-xs text-green-400"><i class="fa-solid fa-star text-yellow-500"></i> ${rating}</span><span class="text-[10px] uppercase border border-white/30 rounded px-1">${type}</span></div></div></div>`;
+            card.innerHTML = `<div class="aspect-[2/3] relative"><img src="${IMAGE_BASE_URL}w500${media.poster_path}" alt="${title}" class="w-full h-full object-cover" loading="lazy"><button class="view-list-toggle absolute top-3 right-3 w-9 h-9 bg-black/65 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 z-20 hover:bg-purple-500/30 transition" data-list-id="${media.id}" data-list-type="${type}"><i class="fa-solid fa-plus text-xs"></i></button><button class="view-watch-toggle watch-circle-btn absolute bottom-14 left-3 z-50 rounded-full bg-black/70 backdrop-blur-md border border-white/15 text-white font-semibold hover:bg-purple-500/25" data-watch-id="${media.id}" data-watch-type="${type}"><i class="fa-regular fa-eye-slash"></i></button><div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end"><div class="self-center mb-auto mt-auto text-white text-5xl"><i class="fa-solid fa-circle-play"></i></div><h3 class="font-bold text-sm truncate">${title}</h3><div class="flex gap-2 items-center mt-1"><span class="text-xs text-green-400"><i class="fa-solid fa-star text-yellow-500"></i> ${rating}</span><span class="text-[10px] uppercase border border-white/30 rounded px-1">${type}</span></div></div></div>`;
             card.querySelector('.view-list-toggle').onclick = e => { e.stopPropagation(); toggleList({id:media.id,title,media_type:type,poster_path:media.poster_path,vote_average:media.vote_average}); };
+            card.querySelector('.view-watch-toggle').onclick = e => { e.stopPropagation(); markAsWatched({id:media.id,title,media_type:type,poster_path:media.poster_path,vote_average:media.vote_average}); };
             card.onclick = () => openDetails(media.id, type);
             return card;
         }
@@ -1146,6 +1215,22 @@
             return { id: media.id, title: media.title || media.name || 'Untitled', media_type: type, poster_path: media.poster_path || null, vote_average: media.vote_average || 0 };
         }
 
+        function renderDetailCast(items) {
+            const container = document.getElementById('details-cast');
+            if (!container) return;
+            const cast = (items || []).filter(person => person && person.profile_path).slice(0, 12);
+            container.innerHTML = cast.length ? cast.map(person => `
+                <div class="details-cast-card group">
+                    <div class="details-cast-avatar">
+                        <img src="${IMAGE_BASE_URL}w185${person.profile_path}" alt="${person.name || 'Cast member'}" loading="lazy">
+                    </div>
+                    <div class="mt-2">
+                        <p class="text-sm font-bold text-white truncate">${person.name || 'Unknown'}</p>
+                        <p class="text-xs text-gray-500 truncate mt-0.5">${person.character || 'Cast'}</p>
+                    </div>
+                </div>`).join('') : '<p class="text-sm text-gray-500">Cast information is unavailable for this title.</p>';
+        }
+
         function renderDetailRecommendations(items, type) {
             const container = document.getElementById('details-recommendations');
             const empty = document.getElementById('details-no-recommendations');
@@ -1178,60 +1263,120 @@
         async function openDetails(id, type='movie', replaceHistory=true) {
             if (detailsLoading) return;
             detailsLoading = true;
-            const detailView = document.getElementById('view-details');
             const root = document.getElementById('details-page-root');
             setDetailsViewVisible(true);
             root.classList.remove('details-page-enter'); void root.offsetWidth; root.classList.add('details-page-enter');
-            document.getElementById('details-recommendations').innerHTML = Array(6).fill(0).map(() => '<div class="aspect-[2/3] rounded-xl bg-neutral-900 animate-pulse border border-white/5"></div>').join('');
+
+            const recContainer = document.getElementById('details-recommendations');
+            const castContainer = document.getElementById('details-cast');
+            if (recContainer) recContainer.innerHTML = Array(6).fill(0).map(() => '<div class="aspect-[2/3] rounded-xl bg-neutral-900 animate-pulse border border-white/5"></div>').join('');
+            if (castContainer) castContainer.innerHTML = '<p class="text-sm text-gray-500">Loading cast...</p>';
+
             try {
                 const endpoint = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
                 const recEndpoint = type === 'tv' ? `/tv/${id}/recommendations` : `/movie/${id}/recommendations`;
-                const [detailRes, recRes] = await Promise.all([
-                    fetch(`${TMDB_BASE_URL}${endpoint}?api_key=${TMDB_API_KEY}`),
-                    fetch(`${TMDB_BASE_URL}${recEndpoint}?api_key=${TMDB_API_KEY}`)
-                ]);
+                const creditsEndpoint = type === 'tv' ? `/tv/${id}/aggregate_credits` : `/movie/${id}/credits`;
+                const makeUrl = path => `${TMDB_BASE_URL}${path}?api_key=${encodeURIComponent(TMDB_API_KEY)}&language=en-US`;
+
+                // Load the main title first. Optional sections must never prevent the title from loading.
+                const detailRes = await fetch(makeUrl(endpoint));
+                if (!detailRes.ok) throw new Error(`TMDB details request failed: ${detailRes.status}`);
                 const media = await detailRes.json();
-                const recs = await recRes.json();
+                if (!media || !media.id) throw new Error('TMDB returned invalid title data');
+
                 currentDetails = { ...media, type };
-                const title = media.title || media.name || 'Untitled';
+                const title = media.title || media.name || media.original_title || media.original_name || 'Untitled';
                 const release = media.release_date || media.first_air_date || '';
-                const runtime = type === 'tv' ? (media.episode_run_time?.[0] ? `${media.episode_run_time[0]} min/ep` : '') : (media.runtime ? `${Math.floor(media.runtime/60)}h ${media.runtime%60}m` : '');
-                document.getElementById('details-backdrop').style.backgroundImage = media.backdrop_path ? `url('${IMAGE_BASE_URL}original${media.backdrop_path}')` : 'none';
-                document.getElementById('details-poster').src = media.poster_path ? `${IMAGE_BASE_URL}w500${media.poster_path}` : '';
-                document.getElementById('details-poster').alt = title;
-                document.getElementById('details-title').textContent = title;
-                document.getElementById('details-tagline').textContent = media.tagline || '';
-                document.getElementById('details-tagline').classList.toggle('hidden', !media.tagline);
-                document.getElementById('details-type').textContent = type === 'tv' ? 'Series' : 'Movie';
-                document.getElementById('details-year').textContent = release ? release.slice(0,4) : 'N/A';
-                document.getElementById('details-runtime').textContent = runtime;
-                document.getElementById('details-cert').textContent = media.certification || (media.content_ratings?.results?.find(x=>x.iso_3166_1==='US')?.rating || '');
-                document.getElementById('details-cert').classList.toggle('hidden', !document.getElementById('details-cert').textContent);
-                document.getElementById('details-rating').innerHTML = `<i class="fa-solid fa-star text-yellow-500 text-sm"></i> ${media.vote_average ? media.vote_average.toFixed(1) : 'NR'}/10`;
-                document.getElementById('details-votes').textContent = media.vote_count ? media.vote_count.toLocaleString() : '—';
-                document.getElementById('details-language').textContent = media.original_language || '—';
-                document.getElementById('details-popularity').textContent = media.popularity ? media.popularity.toFixed(0) : '—';
-                document.getElementById('details-overview').textContent = media.overview || 'No overview available.';
-                document.getElementById('details-genres').innerHTML = (media.genres || []).map(g => `<span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300">${g.name}</span>`).join('');
+                const runtime = type === 'tv'
+                    ? (media.episode_run_time?.[0] ? `${media.episode_run_time[0]} min/ep` : '')
+                    : (media.runtime ? `${Math.floor(media.runtime / 60)}h ${media.runtime % 60}m` : '');
+
+                const setText = (id, value, fallback='N/A') => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = value || fallback;
+                };
+
+                const backdrop = document.getElementById('details-backdrop');
+                const poster = document.getElementById('details-poster');
+                if (backdrop) backdrop.style.backgroundImage = media.backdrop_path ? `url('${IMAGE_BASE_URL}original${media.backdrop_path}')` : 'none';
+                if (poster) {
+                    poster.src = media.poster_path ? `${IMAGE_BASE_URL}w500${media.poster_path}` : '';
+                    poster.alt = title;
+                }
+                setText('details-title', title, 'Untitled');
+                setText('details-tagline', media.tagline || '', '');
+                const tagline = document.getElementById('details-tagline');
+                if (tagline) tagline.classList.toggle('hidden', !media.tagline);
+                setText('details-type', type === 'tv' ? 'Series' : 'Movie');
+                setText('details-year', release ? release.slice(0, 4) : '', 'N/A');
+                setText('details-release-date', release ? new Date(release + 'T00:00:00').toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'}) : '', 'N/A');
+                setText('details-runtime', runtime, '');
+                setText('details-runtime-stat', runtime, 'N/A');
+                setText('details-quality', 'Up to HD', 'Up to HD');
+
+                const certification = media.certification || media.content_ratings?.results?.find(x => x.iso_3166_1 === 'US')?.rating || '';
+                setText('details-cert', certification, '');
+                const certEl = document.getElementById('details-cert');
+                if (certEl) certEl.classList.toggle('hidden', !certification);
+                const ratingEl = document.getElementById('details-rating');
+                if (ratingEl) ratingEl.innerHTML = `<i class="fa-solid fa-star text-yellow-500 text-sm"></i> ${media.vote_average ? Number(media.vote_average).toFixed(1) : 'NR'}/10`;
+                setText('details-votes', media.vote_count ? Number(media.vote_count).toLocaleString() : '', '—');
+                setText('details-language', media.original_language || '', '—');
+                setText('details-popularity', media.popularity ? Number(media.popularity).toFixed(0) : '', '—');
+                setText('details-overview', media.overview || '', 'No overview available.');
+
+                const genres = document.getElementById('details-genres');
+                if (genres) genres.innerHTML = (media.genres || []).map(g => `<span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300">${g.name}</span>`).join('');
+
+                // Fetch optional sections independently. A failure here cannot break the details page.
+                const [recsResult, creditsResult] = await Promise.allSettled([
+                    fetch(makeUrl(recEndpoint)).then(async r => r.ok ? r.json() : ({results:[]})),
+                    fetch(makeUrl(creditsEndpoint)).then(async r => r.ok ? r.json() : ({cast:[]}))
+                ]);
+                const recs = recsResult.status === 'fulfilled' ? recsResult.value : {results:[]};
+                const credits = creditsResult.status === 'fulfilled' ? creditsResult.value : {cast:[]};
+
+                renderDetailCast(credits.cast || []);
+                renderDetailRecommendations(recs.results || [], type);
+
                 const listBtn = document.getElementById('details-list');
                 const syncDetailListButton = () => {
+                    if (!listBtn) return;
                     const saved = isInList(id, type);
                     listBtn.innerHTML = saved ? '<i class="fa-solid fa-check"></i> In My List' : '<i class="fa-solid fa-plus"></i> My List';
                     listBtn.classList.toggle('bg-purple-500/20', saved);
                     listBtn.classList.toggle('border-purple-400/50', saved);
                 };
                 syncDetailListButton();
-                listBtn.onclick = () => { toggleList(detailMediaObject(media,type)); syncDetailListButton(); };
-                document.getElementById('details-play').onclick = () => {
-                    addToHistory(detailMediaObject(media,type));
+                if (listBtn) listBtn.onclick = () => { toggleList(detailMediaObject(media, type)); syncDetailListButton(); };
+
+                const watchedBtn = document.getElementById('details-watched');
+                const syncWatchedButton = () => {
+                    if (!watchedBtn) return;
+                    const watched = isWatched(id, type);
+                    watchedBtn.innerHTML = watched ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-regular fa-eye-slash"></i>';
+                    watchedBtn.classList.toggle('watched-badge', watched);
+                    watchedBtn.classList.toggle('border-purple-400/50', watched);
+                };
+                syncWatchedButton();
+                if (watchedBtn) watchedBtn.onclick = () => { markAsWatched(detailMediaObject(media, type)); syncWatchedButton(); };
+
+                const playBtn = document.getElementById('details-play');
+                if (playBtn) playBtn.onclick = () => {
+                    addToHistory(detailMediaObject(media, type));
                     openPlayer(id, title, type);
                 };
-                renderDetailRecommendations(recs.results || [], type);
-                if (replaceHistory) history.pushState({details:true,id,type}, '', `#${type}-${id}`);
+
+                refreshWatchedButtons();
+                if (replaceHistory) history.pushState({details:true, id, type}, '', `#${type}-${id}`);
             } catch (err) {
                 console.error('Details error:', err);
-                document.getElementById('details-title').textContent = 'Could not load this title';
-                document.getElementById('details-overview').textContent = 'Please try again in a moment.';
+                const titleEl = document.getElementById('details-title');
+                const overviewEl = document.getElementById('details-overview');
+                if (titleEl) titleEl.textContent = 'Could not load this title';
+                if (overviewEl) overviewEl.textContent = 'Please try again in a moment.';
+                if (castContainer) castContainer.innerHTML = '<p class="text-sm text-gray-500">Cast information is unavailable for this title.</p>';
+                if (recContainer) recContainer.innerHTML = '';
             } finally {
                 detailsLoading = false;
             }
