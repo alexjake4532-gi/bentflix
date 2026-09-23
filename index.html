@@ -251,7 +251,21 @@
     .profile-avatar-ring { position:absolute; inset:0; border-radius:9999px; background:linear-gradient(135deg,#c084fc,#7c3aed 55%,#4c1d95); padding:1px; }
     .profile-avatar-face { position:absolute; inset:2px; border-radius:9999px; background:#17131f; display:flex; align-items:center; justify-content:center; color:#c084fc; border:1px solid rgba(255,255,255,.08); }
     @media (prefers-reduced-motion: reduce) { .bentflix-modal-open, .bentflix-modal-closing, .bentflix-modal-open > div, .bentflix-modal-closing > div { animation:none !important; } }
-    </style>
+    
+    /* Movie / series details page */
+    .details-page { min-height: calc(100vh - 80px); background: #09090b; }
+    .details-backdrop { min-height: 560px; position: relative; background-size: cover; background-position: center top; }
+    .details-backdrop::before { content:""; position:absolute; inset:0; background: linear-gradient(90deg,#09090b 0%,rgba(9,9,11,.88) 34%,rgba(9,9,11,.45) 68%,rgba(9,9,11,.9) 100%), linear-gradient(0deg,#09090b 0%,transparent 55%,rgba(0,0,0,.15) 100%); }
+    .details-content { position:relative; z-index:2; }
+    .details-poster { box-shadow: 0 25px 70px rgba(0,0,0,.6); }
+    .details-stat { background: rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.08); backdrop-filter:blur(12px); }
+    .details-recommendation { transform: translateY(0); transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+    .details-recommendation:hover { transform:translateY(-6px); border-color:rgba(168,85,247,.55); box-shadow:0 18px 40px rgba(0,0,0,.35); }
+    .details-page-enter { animation: detailsPageIn .42s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes detailsPageIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+    @media (max-width: 768px) { .details-backdrop { min-height: 760px; background-position:center top; } .details-backdrop::before { background:linear-gradient(180deg,rgba(9,9,11,.35) 0%,rgba(9,9,11,.7) 42%,#09090b 78%); } }
+
+</style>
 </head>
 <body class="antialiased min-h-screen flex flex-col relative">
 
@@ -339,6 +353,9 @@
                     <button id="hero-list-btn" class="bg-gray-500/40 hover:bg-purple-500/30 backdrop-blur-md border border-white/20 text-white w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-xl" title="Add to My List">
                         <i class="fa-solid fa-plus text-xl"></i>
                     </button>
+                    <button id="hero-info-btn" class="bg-black/35 hover:bg-purple-500/20 backdrop-blur-md border border-white/15 text-white px-6 py-3 rounded-full font-semibold flex items-center gap-2 transition-all hover:scale-105 shadow-xl">
+                        <i class="fa-solid fa-circle-info"></i> More Info
+                    </button>
                 </div>
             </div>
 
@@ -384,6 +401,58 @@
             <div class="view-heading"><div><h1 class="view-title">Watch History</h1><p id="page-history-count" class="view-subtitle">Titles you recently opened.</p></div><i class="fa-solid fa-clock-rotate-left text-4xl text-purple-400"></i></div>
             <div id="page-history-results" class="view-grid"></div>
             <div id="page-empty-history" class="empty-view hidden"><div><i class="fa-solid fa-clock-rotate-left text-5xl text-purple-400 mb-5"></i><h2 class="text-xl font-bold">No watch history yet</h2><p class="text-gray-500 mt-2">Play a movie or series and it will appear here.</p></div></div>
+        </div>
+    </section>
+
+
+    <!-- Movie / Series Details Page -->
+    <section id="view-details" class="app-view details-page">
+        <div id="details-page-root" class="details-page-enter">
+            <div id="details-backdrop" class="details-backdrop">
+                <div class="details-content view-shell pt-8 md:pt-12 pb-14">
+                    <button id="details-back" class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-gray-200 backdrop-blur-md hover:bg-white/10 hover:text-white transition mb-8">
+                        <i class="fa-solid fa-arrow-left"></i> Back
+                    </button>
+                    <div class="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-12 items-end">
+                        <div class="hidden sm:block">
+                            <img id="details-poster" class="details-poster w-full max-w-[280px] rounded-2xl border border-white/10 object-cover" src="" alt="">
+                        </div>
+                        <div class="max-w-4xl">
+                            <div class="flex flex-wrap items-center gap-2 mb-4">
+                                <span id="details-type" class="px-2.5 py-1 rounded-md bg-purple-500/20 border border-purple-400/30 text-purple-200 text-[11px] uppercase tracking-widest font-bold"></span>
+                                <span id="details-year" class="text-sm text-gray-300"></span>
+                                <span id="details-runtime" class="text-sm text-gray-400"></span>
+                                <span id="details-cert" class="text-xs border border-white/20 rounded px-1.5 py-0.5 text-gray-300"></span>
+                            </div>
+                            <h1 id="details-title" class="text-4xl md:text-6xl font-black tracking-tight text-white leading-[.98]"></h1>
+                            <p id="details-tagline" class="text-purple-200/80 text-lg mt-4 italic"></p>
+                            <div class="flex flex-wrap items-center gap-3 mt-6">
+                                <button id="details-play" class="inline-flex items-center gap-2 rounded-xl bg-white text-black px-6 py-3 font-bold hover:bg-gray-200 hover:scale-[1.02] transition"><i class="fa-solid fa-play"></i> Play Now</button>
+                                <button id="details-list" class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-black/35 px-5 py-3 font-bold text-white backdrop-blur-md hover:bg-purple-500/20 hover:border-purple-400/40 transition"><i class="fa-solid fa-plus"></i> My List</button>
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-7 max-w-3xl">
+                                <div class="details-stat rounded-xl p-3"><div class="text-[10px] uppercase tracking-widest text-gray-500">Rating</div><div id="details-rating" class="text-xl font-black text-white mt-1"></div></div>
+                                <div class="details-stat rounded-xl p-3"><div class="text-[10px] uppercase tracking-widest text-gray-500">Votes</div><div id="details-votes" class="text-xl font-black text-white mt-1"></div></div>
+                                <div class="details-stat rounded-xl p-3"><div class="text-[10px] uppercase tracking-widest text-gray-500">Language</div><div id="details-language" class="text-xl font-black text-white mt-1 uppercase"></div></div>
+                                <div class="details-stat rounded-xl p-3"><div class="text-[10px] uppercase tracking-widest text-gray-500">Popularity</div><div id="details-popularity" class="text-xl font-black text-white mt-1"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-10 max-w-4xl lg:ml-[328px]">
+                        <div class="flex flex-wrap gap-2 mb-5" id="details-genres"></div>
+                        <h2 class="text-xl font-bold text-white mb-2">Overview</h2>
+                        <p id="details-overview" class="text-gray-300 leading-7 text-sm md:text-base"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="view-shell py-12">
+                <div class="flex items-end justify-between gap-4 mb-6">
+                    <div><span class="text-xs uppercase tracking-[.25em] text-purple-300">Because you watched this</span><h2 class="text-2xl md:text-3xl font-black mt-1">More like this</h2></div>
+                    <span class="text-xs text-gray-500 hidden sm:block">Recommended for you</span>
+                </div>
+                <div id="details-recommendations" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"></div>
+                <div id="details-no-recommendations" class="hidden py-14 text-center text-gray-500">No recommendations found for this title.</div>
+            </div>
         </div>
     </section>
 
@@ -674,7 +743,7 @@
                 </div>
             `;
 
-            card.onclick = () => openPlayer(item.id, item.title, item.type);
+            card.onclick = () => openDetails(item.id, item.type);
             const removeBtn = card.querySelector('.remove-saved');
             if (removeBtn) {
                 removeBtn.onclick = (event) => {
@@ -748,6 +817,7 @@
         const heroTypeBadge = document.getElementById('hero-type-badge');
         const heroPlayBtn = document.getElementById('hero-play-btn');
         const heroListBtn = document.getElementById('hero-list-btn');
+        const heroInfoBtn = document.getElementById('hero-info-btn');
         const heroDots = document.getElementById('hero-dots');
         const categoriesContainer = document.getElementById('categories-container');
         const playerModal = document.getElementById('player-modal');
@@ -824,6 +894,8 @@
                 });
                 refreshAllListButtons();
             };
+
+            heroInfoBtn.onclick = () => openDetails(media.id, 'movie');
 
             heroPlayBtn.onclick = () => {
                 addToHistory({
@@ -933,16 +1005,7 @@
                             });
                         };
 
-                        card.onclick = () => {
-                            addToHistory({
-                                id: media.id,
-                                title: title,
-                                media_type: category.type,
-                                poster_path: media.poster_path,
-                                vote_average: media.vote_average
-                            });
-                            openPlayer(media.id, title, category.type);
-                        };
+                        card.onclick = () => openDetails(media.id, category.type);
 
                         track.appendChild(card);
                         refreshAllListButtons();
@@ -1006,6 +1069,7 @@
             if (view === 'movies') loadMoviesView();
             if (view === 'series') loadSeriesView();
             if (view === 'discover') loadDiscoverView();
+            if (view === 'details') setDetailsViewVisible(true);
         }
 
         function createViewCard(media, type) {
@@ -1016,7 +1080,7 @@
             const rating = media.vote_average ? media.vote_average.toFixed(1) : 'NR';
             card.innerHTML = `<div class="aspect-[2/3] relative"><img src="${IMAGE_BASE_URL}w500${media.poster_path}" alt="${title}" class="w-full h-full object-cover" loading="lazy"><button class="view-list-toggle absolute top-3 right-3 w-9 h-9 bg-black/65 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 z-20 hover:bg-white hover:text-black transition" data-list-id="${media.id}" data-list-type="${type}"><i class="fa-solid fa-plus text-xs"></i></button><div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end"><div class="self-center mb-auto mt-auto text-white text-5xl"><i class="fa-solid fa-circle-play"></i></div><h3 class="font-bold text-sm truncate">${title}</h3><div class="flex gap-2 items-center mt-1"><span class="text-xs text-green-400"><i class="fa-solid fa-star text-yellow-500"></i> ${rating}</span><span class="text-[10px] uppercase border border-white/30 rounded px-1">${type}</span></div></div></div>`;
             card.querySelector('.view-list-toggle').onclick = e => { e.stopPropagation(); toggleList({id:media.id,title,media_type:type,poster_path:media.poster_path,vote_average:media.vote_average}); };
-            card.onclick = () => { addToHistory({id:media.id,title,media_type:type,poster_path:media.poster_path,vote_average:media.vote_average}); openPlayer(media.id,title,type); };
+            card.onclick = () => openDetails(media.id, type);
             return card;
         }
 
@@ -1055,6 +1119,130 @@
             const results=document.getElementById('genre-results');
             const endpoint=type==='tv'?`/discover/tv?with_genres=${id}&sort_by=popularity.desc`:`/discover/movie?with_genres=${id}&sort_by=popularity.desc`;
             await loadGridView('genre-results',endpoint,type);
+        }
+
+        // --- Title Details Page ---
+        let currentDetails = null;
+        let detailsLoading = false;
+
+        function setDetailsViewVisible(visible) {
+            const detail = document.getElementById('view-details');
+            const home = document.getElementById('main-content');
+            if (!detail || !home) return;
+            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('view-active'));
+            home.classList.toggle('home-hidden', visible);
+            if (visible) {
+                detail.classList.add('view-active');
+                setActiveNavByView('home');
+                window.scrollTo({top:0, behavior:'smooth'});
+            } else {
+                detail.classList.remove('view-active');
+                home.classList.remove('home-hidden');
+                setActiveNavByView('home');
+            }
+        }
+
+        function detailMediaObject(media, type) {
+            return { id: media.id, title: media.title || media.name || 'Untitled', media_type: type, poster_path: media.poster_path || null, vote_average: media.vote_average || 0 };
+        }
+
+        function renderDetailRecommendations(items, type) {
+            const container = document.getElementById('details-recommendations');
+            const empty = document.getElementById('details-no-recommendations');
+            container.innerHTML = '';
+            const filtered = (items || []).filter(x => x.poster_path && x.id !== currentDetails?.id).slice(0, 12);
+            empty.classList.toggle('hidden', filtered.length > 0);
+            filtered.forEach(media => {
+                const title = media.title || media.name || media.original_title || media.original_name || 'Untitled';
+                const card = document.createElement('div');
+                card.className = 'details-recommendation group relative cursor-pointer rounded-xl overflow-hidden border border-white/5 bg-[#151518]';
+                card.innerHTML = `
+                    <div class="aspect-[2/3] relative">
+                        <img src="${IMAGE_BASE_URL}w500${media.poster_path}" alt="${title}" class="w-full h-full object-cover" loading="lazy">
+                        <button class="details-rec-list absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 backdrop-blur-md border border-white/15 text-white flex items-center justify-center z-10" data-list-id="${media.id}" data-list-type="${type}"><i class="fa-solid fa-plus text-xs"></i></button>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-3 flex flex-col justify-end">
+                            <h3 class="font-bold text-sm truncate">${title}</h3>
+                            <div class="text-xs text-green-400 mt-1"><i class="fa-solid fa-star text-yellow-500"></i> ${media.vote_average ? media.vote_average.toFixed(1) : 'NR'}</div>
+                        </div>
+                    </div>`;
+                card.querySelector('.details-rec-list').onclick = e => {
+                    e.stopPropagation();
+                    toggleList(detailMediaObject(media, type));
+                };
+                card.onclick = () => openDetails(media.id, type);
+                container.appendChild(card);
+            });
+            refreshAllListButtons();
+        }
+
+        async function openDetails(id, type='movie', replaceHistory=true) {
+            if (detailsLoading) return;
+            detailsLoading = true;
+            const detailView = document.getElementById('view-details');
+            const root = document.getElementById('details-page-root');
+            setDetailsViewVisible(true);
+            root.classList.remove('details-page-enter'); void root.offsetWidth; root.classList.add('details-page-enter');
+            document.getElementById('details-recommendations').innerHTML = Array(6).fill(0).map(() => '<div class="aspect-[2/3] rounded-xl bg-neutral-900 animate-pulse border border-white/5"></div>').join('');
+            try {
+                const endpoint = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
+                const recEndpoint = type === 'tv' ? `/tv/${id}/recommendations` : `/movie/${id}/recommendations`;
+                const [detailRes, recRes] = await Promise.all([
+                    fetch(`${TMDB_BASE_URL}${endpoint}?api_key=${TMDB_API_KEY}`),
+                    fetch(`${TMDB_BASE_URL}${recEndpoint}?api_key=${TMDB_API_KEY}`)
+                ]);
+                const media = await detailRes.json();
+                const recs = await recRes.json();
+                currentDetails = { ...media, type };
+                const title = media.title || media.name || 'Untitled';
+                const release = media.release_date || media.first_air_date || '';
+                const runtime = type === 'tv' ? (media.episode_run_time?.[0] ? `${media.episode_run_time[0]} min/ep` : '') : (media.runtime ? `${Math.floor(media.runtime/60)}h ${media.runtime%60}m` : '');
+                document.getElementById('details-backdrop').style.backgroundImage = media.backdrop_path ? `url('${IMAGE_BASE_URL}original${media.backdrop_path}')` : 'none';
+                document.getElementById('details-poster').src = media.poster_path ? `${IMAGE_BASE_URL}w500${media.poster_path}` : '';
+                document.getElementById('details-poster').alt = title;
+                document.getElementById('details-title').textContent = title;
+                document.getElementById('details-tagline').textContent = media.tagline || '';
+                document.getElementById('details-tagline').classList.toggle('hidden', !media.tagline);
+                document.getElementById('details-type').textContent = type === 'tv' ? 'Series' : 'Movie';
+                document.getElementById('details-year').textContent = release ? release.slice(0,4) : 'N/A';
+                document.getElementById('details-runtime').textContent = runtime;
+                document.getElementById('details-cert').textContent = media.certification || (media.content_ratings?.results?.find(x=>x.iso_3166_1==='US')?.rating || '');
+                document.getElementById('details-cert').classList.toggle('hidden', !document.getElementById('details-cert').textContent);
+                document.getElementById('details-rating').innerHTML = `<i class="fa-solid fa-star text-yellow-500 text-sm"></i> ${media.vote_average ? media.vote_average.toFixed(1) : 'NR'}/10`;
+                document.getElementById('details-votes').textContent = media.vote_count ? media.vote_count.toLocaleString() : '—';
+                document.getElementById('details-language').textContent = media.original_language || '—';
+                document.getElementById('details-popularity').textContent = media.popularity ? media.popularity.toFixed(0) : '—';
+                document.getElementById('details-overview').textContent = media.overview || 'No overview available.';
+                document.getElementById('details-genres').innerHTML = (media.genres || []).map(g => `<span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300">${g.name}</span>`).join('');
+                const listBtn = document.getElementById('details-list');
+                const syncDetailListButton = () => {
+                    const saved = isInList(id, type);
+                    listBtn.innerHTML = saved ? '<i class="fa-solid fa-check"></i> In My List' : '<i class="fa-solid fa-plus"></i> My List';
+                    listBtn.classList.toggle('bg-purple-500/20', saved);
+                    listBtn.classList.toggle('border-purple-400/50', saved);
+                };
+                syncDetailListButton();
+                listBtn.onclick = () => { toggleList(detailMediaObject(media,type)); syncDetailListButton(); };
+                document.getElementById('details-play').onclick = () => {
+                    addToHistory(detailMediaObject(media,type));
+                    openPlayer(id, title, type);
+                };
+                renderDetailRecommendations(recs.results || [], type);
+                if (replaceHistory) history.pushState({details:true,id,type}, '', `#${type}-${id}`);
+            } catch (err) {
+                console.error('Details error:', err);
+                document.getElementById('details-title').textContent = 'Could not load this title';
+                document.getElementById('details-overview').textContent = 'Please try again in a moment.';
+            } finally {
+                detailsLoading = false;
+            }
+        }
+
+        function closeDetails() {
+            currentDetails = null;
+            setDetailsViewVisible(false);
+            currentView = 'home';
+            if (location.hash) history.replaceState({}, '', location.pathname + location.search);
+            window.scrollTo({top:0, behavior:'smooth'});
         }
 
         // --- Header Modals Logic ---
@@ -1182,14 +1370,7 @@
 
                                 card.onclick = () => {
                                     closeAnimatedModal(searchModal);
-                                    addToHistory({
-                                        id: media.id,
-                                        title,
-                                        media_type: type,
-                                        poster_path: media.poster_path,
-                                        vote_average: media.vote_average
-                                    });
-                                    openPlayer(media.id, title, type);
+                                    openDetails(media.id, type);
                                 };
                                 searchResults.appendChild(card);
                             });
@@ -1226,6 +1407,9 @@
 
             settingsModal.onclick = (e) => { if (e.target === settingsModal) closeAnimatedModal(settingsModal); };
         }
+
+        document.getElementById('details-back')?.addEventListener('click', () => closeDetails());
+        window.addEventListener('popstate', () => { if (!location.hash) closeDetails(); });
 
         // --- Video Player Overlay Logic ---
         function openPlayer(tmdbId, title, mediaType) {
